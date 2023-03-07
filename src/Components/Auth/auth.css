@@ -1,0 +1,17 @@
+@import '../../index.css';
+
+.auth_container {
+    height: 100vh;
+    background-color: var(--base-color);
+}
+.auth_form_container {
+    padding: 2rem;
+    min-height: 400px;
+}
+.auth_form {
+    margin-top: 2rem;
+}
+/* .auth_form_container {
+    display: flex;
+    justify-content: center;
+} */
