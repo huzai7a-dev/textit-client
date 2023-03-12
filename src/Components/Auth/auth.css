@@ -2,7 +2,7 @@
 
 .auth_container {
     height: 100vh;
-    background-color: var(--base-color);
+    background: linear-gradient(-45deg, rgba(194,101,227,1) 30%, rgba(131,101,227,1) 70%);
 }
 .auth_form_container {
     padding: 2rem;

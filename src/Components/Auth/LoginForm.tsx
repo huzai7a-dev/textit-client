@@ -2,13 +2,18 @@ import { Grid, TextField, Paper, Typography, Button } from '@mui/material';
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../../Constants/schema';
-
+import {useNavigate } from 'react-router';
 import './auth.css';
 import Colors from '../../Constants/Colors';
 import { Ilogin } from '../../types/auth';
 import { Link } from 'react-router-dom';
+import { loginUser } from '../../service/auth';
+import { useContext } from 'react';
+import { AlertContext } from '../../Context/AlertWrapper';
 
 const LoginForm = () => {
+    const { showAlert } = useContext(AlertContext);
+    const navigate = useNavigate()
     const { control, handleSubmit, formState: {errors} } = useForm<Ilogin>({
         defaultValues: {
             email: '',
@@ -17,10 +22,25 @@ const LoginForm = () => {
         resolver:yupResolver(loginSchema)
     })
 
-    const onSubmit:SubmitHandler<Ilogin> = (data:Ilogin) => {
-        console.log(data)
+    const redirectToHomePage = () => {
+        navigate('/');
+    }
+    
+    const onSubmit: SubmitHandler<Ilogin> = async (payload: Ilogin) => {
+        
+        try {
+            const { data } = await loginUser(payload);
+            showAlert(data.message || 'Login Successful', 'success');
+            localStorage.setItem('user',JSON.stringify({data}))
+            redirectToHomePage()
+        } catch (error: any) {
+            if (error.response) {
+                showAlert(error.response.data, 'error')
+            }
+        }
     }
 
+    
     return (
         <Grid
             container

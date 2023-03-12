@@ -1,0 +1,10 @@
+.preview_container {
+    padding: .4rem .8rem;
+    margin: 1rem 0rem;
+}
+.prview_img {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    margin-right: .4rem;
+}

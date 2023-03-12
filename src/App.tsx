@@ -1,17 +1,19 @@
 import { createTheme,ThemeProvider } from '@mui/material';
-import Login from './Pages/Auth/Login';
-import Signup from './Pages/Auth/SignUp';
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+
+import Signup from './Pages/Auth/SignUp';
+import Login from './Pages/Auth/Login';
 import Colors from './Constants/Colors';
+import AlertWrapper from './Context/AlertWrapper';
 
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element:<h1>Chat</h1>
+    element: <h1>Chat</h1>
   },
   {
     path: "/login",
@@ -38,7 +40,9 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <RouterProvider router={router} />
+      <AlertWrapper>
+        <RouterProvider router={router} />
+      </AlertWrapper>
     </ThemeProvider>
   )
 }

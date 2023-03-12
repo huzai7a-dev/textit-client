@@ -1,14 +1,22 @@
 import { Grid, TextField, Paper, Typography, Button } from '@mui/material';
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import { yupResolver } from '@hookform/resolvers/yup';
-import { signUpSchema } from '../../Constants/schema';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import './auth.css';
+import { signUpSchema } from '../../Constants/schema';
 import Colors from '../../Constants/Colors';
 import { ISignUp } from '../../types/auth';
-import { Link } from 'react-router-dom';
+import { signupUser } from '../../service/auth';
+import { useContext, useState } from 'react';
+import { AlertContext } from '../../Context/AlertWrapper';
+
 
 const LoginForm = () => {
+    const { showAlert } = useContext(AlertContext);
+    const navigate = useNavigate();
+
     const { control, handleSubmit, formState: { errors } } = useForm<ISignUp>({
         defaultValues: {
             firstName: '',
@@ -19,10 +27,24 @@ const LoginForm = () => {
         },
         resolver: yupResolver(signUpSchema)
     })
-
-    const onSubmit: SubmitHandler<ISignUp> = (data: ISignUp) => {
-        console.log(data)
+    const navigateToLoginPage = () => {
+        navigate('/login');
     }
+    
+    const onSubmit: SubmitHandler<ISignUp> = async (data: ISignUp) => {
+        const { firstName, lastName, email, password } = data;
+        try {
+            const {data} = await signupUser({ firstName, lastName, email, password });
+            showAlert(data.message, 'success');
+            navigateToLoginPage()
+
+        } catch (error: any) {
+            if (error.response) {
+                showAlert(error.response.data, 'error')
+            }
+        }
+    }
+
 
     return (
         <Grid
@@ -131,17 +153,23 @@ const LoginForm = () => {
                                 />
                             }
                         />
+                        
+                        
                         <Button
                             fullWidth
                             color='secondary'
                             variant='contained'
                             type='submit'
-                            style={{ marginTop: '2rem' }}
+                            style={{ marginTop: '.5rem' }}
                         >
                             Signup
                         </Button>
                     </form>
-                    <Typography style={{ marginTop: '.8rem' }}>Already have an account ? <Link color={Colors.secondary} to={'/login'}>Login</Link></Typography>
+                    <Typography
+                        style={{ marginTop: '.8rem' }}
+                    >
+                        Already have an account ? <Link color={Colors.secondary} to={'/login'}>Login</Link>
+                    </Typography>
                 </Paper>
             </Grid>
         </Grid>
